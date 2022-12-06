@@ -1,12 +1,14 @@
 # HeatKeeb
 ## Description
 Jaga had gained interest in custom keyboards and has created a platform to create your own keebs! We know we created his custom keeb on the 22nd of September 2022, at **09:41:17** SGT. Oddly specific but we know it's true.
+
 *Provided challenge files are located in /files/heatkeeb*
 ## Breaking Down the Challenge Files
 ### File Structure
 ![List of files](images/1.png)
 
 The `app.py` is usually the entry point of a Python Web Framework application, the `/static` folder stores the CSS and JS files, and the `/templates` folder stores the HTML files.
+
 ### Identifying the Flag
 First step in tackling a whitebox web CTF challenge is to identify the location of the flag!
 ![Flag Location](images/2.png)
