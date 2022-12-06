@@ -1,7 +1,7 @@
 # HeatKeeb
 ## Description
 Jaga had gained interest in custom keyboards and has created a platform to create your own keebs! We know we created his custom keeb on the 22nd of September 2022, at **09:41:17** SGT. Oddly specific but we know it's true.
-*Provided challenge files are located in /files*
+*Provided challenge files are located in /files/heatkeeb*
 ## Breaking Down the Challenge Files
 ### File Structure
 ![List of files](images/1.png)
