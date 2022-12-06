@@ -3,6 +3,7 @@
 Jaga had gained interest in custom keyboards and has created a platform to create your own keebs! We know we created his custom keeb on the 22nd of September 2022, at **09:41:17** SGT. Oddly specific but we know it's true.
 
 *Provided challenge files are located in /files/heatkeeb*
+
 ## Breaking Down the Challenge Files
 ### File Structure
 ![List of files](images/1.png)
@@ -15,6 +16,7 @@ First step in tackling a whitebox web CTF challenge is to identify the location 
 
 The `TemplateResponse` objects returned by the `/text` URI defined between lines 187 and 202 of `app.py` contains `flag.html`.
 However, only line 199 passes the `FLAG` variable to the `flag.html` template. This is the way to obtain the flag!
+
 ### Flag Requirements
 To obtain the flag, the following action needs to be performed:
 1. Send a `HTTP POST` request to the `/text` URI
@@ -35,6 +37,7 @@ The `ADMIN_TOKEN` is the generated filename of the admin's keyboard and heatmap,
 ![How tokens are generated](images/5.png)
 
 Looking at typical behaviour of the web application, it generates a 16 character long filename/token using a `random.choices` Pseudo Random Number Generator (PRNG) with the timestamp as the seed.
+
 A PRNG will always generate the same sequence of numbers given the same seed. To crack the `ADMIN_TOKEN`, we just need the seed, which is the timestamp of when the admin created his/her keyboard. Conveniently for us, this information is provided in the challenge description! That is requirement 4 satisfied.
 
 ![Usage of admin key](images/6.png)
@@ -72,6 +75,7 @@ import datetime;print(int(datetime.datetime.now().timestamp()))
 ![Converting to EPOCH](images/11.png)
 
 Using an [online epoch converter](https://www.epochconverter.com/), the datetime of the admin keyboard's creation converted to EPOCH is `1663810877`.
+
 ### (Re)Generating Admin Token (Requirement 4)
 With the admin seed value obtained, the original code of the web application can be easily modified to use the admin seed value, as shown below.
 ```
@@ -81,10 +85,12 @@ token = ''.join(random.choices('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
 print(token)
 ```
 The printed `token` is `rMwwbpMkzAwyRoWs`.
+
 ### Logging in as Admin (Requirement 3)
 ![Setting the cracked admin token](images/12.png)
 
 As mentioned previously, the web application's landing page provides a HTML form that stores the provided input in the `token` key of the session variable. Submit the cracked `ADMIN_TOKEN` here to login as admin.
+
 ### Viewing Admin HeatMap
 After logging in as admin by submitting the form, the admin's heatmap can be viewed by clicking on the `View Latest Heatmap` button on the dashboard. The image below is the admin's heatmap.
 ![admin's heatmap](images/13.png)
@@ -100,8 +106,11 @@ Method 2 is much more intuitive and simpler, and is the method I used. However, 
 ![Mapping keeb to image](images/14.png)
 
 The `keeb` array contains 5 lists, `keeb[0]`, which is the first list in `keeb`, corresponds to the top line of pixels in the heatmap. `keeb[0][0]`, which is the first element of the first list in `keeb`, corresponds to the left-most pixel of the top line of the heatmap. This is colour coded as yellow in the image above.
+
 However, `keeb[2][0]` is defined as `key('', 1.75)`, which specifies that it takes up 1.75 pixels horizontally, this is colour-coded as green in the image above.
+
 This causes `keeb[2][1]` to be the third pixel in the third row, instead of being the second pixel of the third row, highlighted in white in the image above.
+
 The above logic can be applied for every red pixel in the heatmap, showing that the `KEY` contains the following:
 - keeb[1]
     - [3][4][5][8]
@@ -111,6 +120,7 @@ The above logic can be applied for every red pixel in the heatmap, showing that 
     - [6]
 
 Which translates into `ertiasghln`. As the `[space]` key is not marked as red in the heatmap, it can be inferred that `KEY` is a 10-character long word in a certain permutation of `ertiasghln`. Time to play Scrabble!
+
 Rearranging alphabets to form a word, like Scrabble, is known as an anagram. As my command of the English language is lacking, I relied on an [online anagram solver](https://www.thewordfinder.com/anagram-solver/).
 ![Anagram solver](images/15.png)
 
